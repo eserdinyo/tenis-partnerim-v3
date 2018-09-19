@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700,800&subset=latin-ext');
+
+
+body {
+    font-family: 'Open Sans', sans-serif;
+    background: linear-gradient(rgba(rgb(20, 20, 20), .1),  rgba(black , .3)), url("../img/back.jpg");
+    background-position: top;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: white;
+}
