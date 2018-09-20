@@ -1,25 +1,55 @@
-<template>
-  <div class="header">
-           <div class="header__logo">
-               
-               <router-link class="header__logo--link" to="/"><img src="../assets/img/logo.png" alt="" class="header__logo--img"></router-link>
+<template lang="pug">
+.header
+  .header__logo
+    router-link.header__logo--link(to='/')
+      img.header__logo--img(src='../assets/img/logo.png', alt='')
+  .header__nav
+    router-link.header__nav--link(
+      v-if="!isLoggedIn",
+      to='/login',
+      ) Giriş
+    p.header__nav--link(
+      v-if="isLoggedIn",
+      ) {{currentUser}}
+    
+    router-link.header__nav--link(
+      v-if="!isLoggedIn",
+      to='/register',
+      ) Kayıt
+    
+    a.header__nav--link(
+      v-if="isLoggedIn",
+      href='#', 
+      @click="logout") Çıkış
 
-           </div>
-           <div class="header__nav">
-               <router-link class="header__nav--link" to="/login">Giriş</router-link>
-               <router-link class="header__nav--link" to="/register">Kayıt</router-link>
-           </div>
-       </div>
 </template>
 
 <script>
+import { AUTH } from "@/firebase";
+
 export default {
   data() {
     return {
-      msg: "Hello You"
+      isLoggedIn: false,
+      currentUser: ""
     };
   },
-  methods: {}
+  methods: {
+    async logout() {
+      try {
+        const res = await AUTH.signOut();
+        this.$router.push("/login");
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  },
+  created() {
+    if (AUTH.currentUser) {
+      this.isLoggedIn = true;
+      this.currentUser = AUTH.currentUser.email;
+    }
+  }
 };
 </script>
 
@@ -44,7 +74,7 @@ export default {
       text-decoration: none;
       border-bottom: 2px solid rgba(255, 255, 255, 0);
       padding-bottom: 5px;
-      transition: all .2s;
+      transition: all 0.2s;
 
       &:hover {
         border-bottom: 2px solid #fff;

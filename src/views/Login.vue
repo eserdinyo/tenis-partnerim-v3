@@ -1,31 +1,50 @@
-<template>
-    <div class="container">
-        <div class="login-box">
-            <div class="login-box__header">
-                <p>Giriş</p>
-            </div>
-            <div class="login-box__content">
-                            <input type="text" id="username" class="login-box__content--input" placeholder="Kullanıcı Adı">
-                    
-                            <input type="password" id="username" class="login-box__content--input" placeholder="Şifre">
-                      
-                        <a href="#" class="login-box__content--btn">Giriş</a>
-                        <a href="#" class="login-box__content--forget">Şifremi unuttum</a>
-                        <img class="login-box__content--nadal" src="../assets/img/nadal.png" alt="">
-            </div>
-        </div>
-    </div>
+<template lang="pug">
+    .container
+      .login-box
+        .login-box__header
+          p Giriş
+        .login-box__content
+          input.login-box__content--input(
+            v-model="email",
+            type='email', 
+            placeholder='Email')
+          
+          input.login-box__content--input(
+            v-model="password"
+            type='password', 
+            placeholder='Şifre')
+          
+          a.login-box__content--btn(
+            href='#',
+            @click="login") Giriş
+          a.login-box__content--forget(href='#') Şifremi unuttum
+          img.login-box__content--nadal(src='../assets/img/nadal.png', alt='')
 </template>
 
 <script>
+import firebase from "firebase";
+import { AUTH, FIRESTORE } from "@/firebase";
+
 export default {
   data() {
     return {
-     
-    }
+      email: "",
+      password: ""
+    };
   },
   methods: {
-    
+    async login(e) {
+      try {
+        const user = await firebase
+          .auth()
+          .signInWithEmailAndPassword(this.email, this.password);
+
+        this.$router.push("/");
+        e.preventDefault();
+      } catch (err) {
+        console.log(err);
+      }
+    }
   }
 };
 </script>
@@ -60,8 +79,6 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-
 
     &--input {
       margin-bottom: 20px;

@@ -9,7 +9,6 @@
 
 
 <script>
-import { mapGetters } from "vuex";
 import AppProfil from "@/components/Profil";
 
 export default {
@@ -21,13 +20,8 @@ export default {
   components: {
     AppProfil
   },
-  computed: {
-    ...mapGetters(["Profile"])
-  },
-  created() {
-    this.username = this.Profile.username;
-    console.log("...");
-  }
+  computed: {},
+  created() {}
 };
 </script>
 

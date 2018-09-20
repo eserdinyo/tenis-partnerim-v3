@@ -8,7 +8,7 @@
             .Form-item
               input.login-box__content--input(
                 name="email",
-                v-model="form.email",
+                v-model="email",
                 v-validate="'required|email'",
                 placeholder='Email')
 
@@ -20,7 +20,7 @@
               input.login-box__content--input(
                 type='text', 
                 placeholder='Username', 
-                v-model="form.username",
+                v-model="username",
                 name="username"
                 v-validate="'min:5'")
 
@@ -32,7 +32,7 @@
               input.login-box__content--input(
                 type='password', 
                 placeholder='Şifre',
-                v-model="form.password",
+                v-model="password",
                 name="password",
                 v-validate="'confirmed:pw_confirm|min_value:8'")
 
@@ -57,40 +57,46 @@
           
           a.login-box__content--forget(href='#') Şifremi unuttum
           img.login-box__content--nadal(src='../assets/img/djokovic.png', alt='')
+      .Modal(:class="{ openModal: isActive }")
+        .Modal__header
+          h4 Email Adresinizi Onaylayın
+          a.Modal__header--btn(href="#", @click="closeModal") &times;
+        .Modal__body
+          p A confirmation email has been sent to muhammetesdasdaer29@gmail.com. Click on the confirmation link in the email to activate your account.
+
 </template>
 
 <script>
-import UserService from "@/services/UserService";
+import { AUTH, FIRESTORE } from "@/firebase";
 
 export default {
   data() {
     return {
-      form: {
-        email: "",
-        username: "",
-        password: ""
-      }
+      email: "",
+      username: "",
+      password: "",
+      isActive: false
     };
   },
   methods: {
     async submitForm() {
-      await UserService.addUser({
-        username: this.form.username,
-        email: this.form.email,
-        password: this.form.password
-      });
-    }
+      try {
+        const user = await AUTH.createUserWithEmailAndPassword(
+          this.email,
+          this.password
+        );
 
-    /* submitForm() {
-      this.$validator.validateAll().then(result => {
-        if (!result) alert("Hatalı yerleri lütfen doldurunuz!");
-        UserService.addUser({
-          username: this.form.username,
-          email: this.form.email,
-          password: this.form.password
+        AUTH.onAuthStateChanged(user => {
+          user.sendEmailVerification();
         });
-      });
-    } */
+        this.isActive = true;
+      } catch (err) {
+        console.log(err.message);
+      }
+    },
+    closeModal() {
+      this.$router.push("/login");
+    }
   }
 };
 </script>
@@ -197,5 +203,49 @@ export default {
       z-index: -1;
     }
   }
+}
+
+.Modal {
+  width: 600px;
+  background-color: #191919;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  display: none;
+  opacity: 0;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #fff;
+    padding: 0 20px;
+
+    &--btn {
+      color: #fff;
+      font-size: 20px;
+      text-decoration: none;
+    }
+  }
+
+  &__body {
+    padding: 20px;
+    p {
+      font-size: 13px;
+      line-height: 18px;
+    }
+  }
+}
+
+.openModal {
+  display: unset;
+  opacity: 1;
 }
 </style>

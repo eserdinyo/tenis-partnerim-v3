@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <app-header></app-header>
+    <app-header :key="$route.fullPath"></app-header>
     <router-view/>
   </div>
 </template>
 
 <script>
-import AppHeader from '@/components/Header' 
+import AppHeader from "@/components/Header";
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    AppHeader,
+    AppHeader
   }
-}
+};
 </script>
