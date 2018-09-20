@@ -8,7 +8,7 @@
             .Form-item
               input.login-box__content--input(
                 name="email",
-                v-model="email",
+                v-model="form.email",
                 v-validate="'required|email'",
                 placeholder='Email')
 
@@ -20,7 +20,7 @@
               input.login-box__content--input(
                 type='text', 
                 placeholder='Username', 
-                v-model="username",
+                v-model="form.username",
                 name="username"
                 v-validate="'min:5'")
 
@@ -32,7 +32,7 @@
               input.login-box__content--input(
                 type='password', 
                 placeholder='Şifre',
-                v-model="password",
+                v-model="form.password",
                 name="password",
                 v-validate="'confirmed:pw_confirm|min_value:8'")
 
@@ -65,30 +65,32 @@ import UserService from "@/services/UserService";
 export default {
   data() {
     return {
-      email: "",
-      username: "",
-      password: ""
+      form: {
+        email: "",
+        username: "",
+        password: ""
+      }
     };
   },
   methods: {
-    submitForm() {
-      this.$validator.validateAll().then(result => {
-        if (result) {
-          // eslint-disable-next-line
-          alert("Form Submitted!");
-          return;
-        }
-
-        alert("Correct them errors!");
+    async submitForm() {
+      await UserService.addUser({
+        username: this.form.username,
+        email: this.form.email,
+        password: this.form.password
       });
-
-      // async
-      /* await UserService.addUser({
-        email: this.email,
-        password: this.password
-      });
-      this.$router.push({ name: "Home" }); */
     }
+
+    /* submitForm() {
+      this.$validator.validateAll().then(result => {
+        if (!result) alert("Hatalı yerleri lütfen doldurunuz!");
+        UserService.addUser({
+          username: this.form.username,
+          email: this.form.email,
+          password: this.form.password
+        });
+      });
+    } */
   }
 };
 </script>
@@ -100,7 +102,7 @@ export default {
   flex-direction: column;
   width: 100%;
   &-item {
-    margin-bottom: 3px;
+    margin-bottom: 10px;
     &__error {
       color: #ff3860;
       font-size: 0.75rem;
@@ -110,7 +112,7 @@ export default {
 }
 .login-box {
   background: rgba(255, 255, 255, 0.99);
-  height: 400px;
+  min-height: 440px;
   width: 500px;
   position: absolute;
   top: 50%;

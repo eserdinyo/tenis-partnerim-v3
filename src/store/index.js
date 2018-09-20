@@ -2,13 +2,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 // import modules
-import Profile from './modules/Profile';
+import Register from './modules/Register';
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
     modules: {
-        Profile
+        Register
     },
 })
 
