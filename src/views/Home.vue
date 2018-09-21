@@ -1,7 +1,7 @@
 <template>
     <div class="container home">
         <div class="row justify-content-start">
-            <app-profil  v-for="user in users" :key="user.id" ></app-profil>
+            <app-profil :user=user v-for="user in users" :key="user.id" ></app-profil>
         </div>
     </div>
 </template>
@@ -29,6 +29,8 @@ export default {
         querySnapshot.forEach(doc => {
           this.users.push(doc.data());
         });
+        console.log(this.users);
+        
       });
   }
 };

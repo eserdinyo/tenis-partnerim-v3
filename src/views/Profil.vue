@@ -7,7 +7,7 @@
         
         .header__content--location  
           i.fas.fa-map-marker-alt
-          p Kadıköy / IST
+          p {{town}} / {{city.toUpperCase()}}
         
 
 </template>
@@ -21,7 +21,9 @@ export default {
     return {
       email: "",
       username: "",
-      user_id: ""
+      user_id: "",
+      city: "",
+      town: ""
     };
   },
   beforeRouteEnter(to, from, next) {
@@ -48,9 +50,14 @@ export default {
             this.email = doc.data().email;
             this.username = doc.data().username;
             this.user_id = doc.data().user_id;
+            this.city = doc.data().city;
+            this.town = doc.data().town;
           });
         });
     }
+  },
+  created() {
+    this.fetchData();
   },
   watch: {
     $route: "fetchData"
@@ -72,7 +79,7 @@ export default {
     &--img {
       width: 200px;
       border-radius: 50%;
-      border: 5px solid #333;
+      border: 5px solid #ecf0f1;
     }
     &--name {
       font-weight: 500;

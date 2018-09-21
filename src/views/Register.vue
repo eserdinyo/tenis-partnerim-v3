@@ -51,13 +51,18 @@
                 v-show="errors.has('password')"
               ) Şifreler aynı olmalı.
             .Form-item
-              select(v-model='selectedCity', @change="getTowns")
+              select.Form-item__select(v-model='selectedCity', @change="getTowns")
                 option(disabled='', value='') Şehir Seç
                 option(v-for="city in cities", :key="city.id", :value="city") {{city.name}}
-              select(v-model='selectedTown')
+              select.Form-item__select--town(v-model='selectedTown')
                 option(disabled='', value='') İlçe Seç
                 option(v-for="town in towns", :key="town.id") {{town.name}}
-
+            .Form-item
+              | Seviyeniz:
+              StarRating.Form-item__rating(@rating-selected="level = $event", 
+              :rating="level",
+              :show-rating="false",
+              :star-size="20")
             .Form-item
               button.login-box__content--btn(
                 type="submit") Kayıt Ol
@@ -76,10 +81,14 @@
 <script>
 import { AUTH, DB } from "@/firebase";
 
+import StarRating from "vue-star-rating";
 import axios from "axios";
 import _ from "underscore";
 
 export default {
+  components: {
+    StarRating
+  },
   data() {
     return {
       email: "",
@@ -89,7 +98,8 @@ export default {
       cities: [],
       towns: [],
       selectedCity: "",
-      selectedTown: ""
+      selectedTown: "",
+      level: 1
     };
   },
   methods: {
@@ -103,7 +113,10 @@ export default {
         DB.collection("users").add({
           user_id: user.user.uid,
           username: this.username,
-          email: this.email
+          email: this.email,
+          city: this.selectedCity.name,
+          town: this.selectedTown,
+          level: this.level,
         });
 
         /* AUTH.onAuthStateChanged(user => {
@@ -121,8 +134,6 @@ export default {
       const id = this.selectedCity._id;
       axios(`http://geoapi.sanalonyedi.net/v1/cities/${id}/towns`).then(res => {
         this.towns = _.sortBy(res.data.data, "name");
-        console.log(this.towns);
-        
       });
     }
   },
@@ -142,10 +153,24 @@ export default {
   width: 100%;
   &-item {
     margin-bottom: 10px;
+    &__rating {
+      margin-top: 3px;
+    }
     &__error {
       color: #ff3860;
       font-size: 0.75rem;
       margin-top: 0.25rem;
+    }
+
+    &__select {
+      border: none;
+      border-bottom: 1px solid #ccc;
+
+      &--town {
+        border: none;
+        border-bottom: 1px solid #ccc;
+        margin-left: 3px;
+      }
     }
   }
 }

@@ -6,15 +6,41 @@
             i.profil__top--msg--icon.far.fa-envelope
         .profil__top--box
           img.profil__top--img(src='../assets/img/profil.jpg', alt='Profil Image')
-        .profil__top--name Rafael Nadal
+        .profil__top--name 
+          router-link(
+            :to="{name: 'user', params:{username:user.username}}",
+            ) {{user.username}}
         .profil__top--location
           i.fas.fa-map-marker-alt
-          |  Istanbul
+          |  {{user.town}} {{user.city.toUpperCase()}}
       .profil__bottom
-        .profil__bottom--level Seviye
+        StarRating.profil__bottom--rating(
+              :rating="user.level",
+              :show-rating="false",
+              :read-only="true",
+              inactive-color="#fff",
+              active-color="#f9ca24",
+              :padding="3"
+              :star-size="13")
         .profil__bottom--desc
           | Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugit quos ea dolor nesciunt deserunt vero sit consequuntur.  
 </template>
+
+<script>
+import StarRating from "vue-star-rating";
+
+export default {
+  components: {
+    StarRating
+  },
+  props: ["user"],
+  data() {
+    return {};
+  },
+  created() {}
+};
+</script>
+
 
 <style lang="scss" scoped>
 .profil {
@@ -56,6 +82,10 @@
       color: #000;
       font-weight: 700;
       margin-bottom: 5px;
+
+      a {
+        color: #000;
+      }
     }
 
     &--location {
@@ -69,7 +99,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    padding: 10px 20px 20px 20px;
     background: linear-gradient(rgba(black, 0.7), rgba(black, 0.7)),
       url("../assets/img/profil_back.jpg");
     background-position: top;
@@ -78,9 +108,8 @@
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
 
-    &--level {
-      margin-bottom: 10px;
-      font-family: sans-serif;
+    &--rating {
+      margin-bottom: 5px;
     }
 
     &--desc {
