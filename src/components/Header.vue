@@ -10,8 +10,8 @@
       ) Giriş
     router-link.header__nav--link(
       v-if="isLoggedIn",
-      :to="{name: 'user', params:{username:currentUser}}"
-      ) {{currentUser}}
+      :to="{name: 'user', params:{username:username}}"
+      ) {{username}}
     
     router-link.header__nav--link(
       v-if="!isLoggedIn",
@@ -26,13 +26,13 @@
 </template>
 
 <script>
-import { AUTH } from "@/firebase";
+import { AUTH, DB } from "@/firebase";
 
 export default {
   data() {
     return {
       isLoggedIn: false,
-      currentUser: ""
+      username: ""
     };
   },
   methods: {
@@ -48,7 +48,16 @@ export default {
   created() {
     if (AUTH.currentUser) {
       this.isLoggedIn = true;
-      this.currentUser = AUTH.currentUser.email;
+      const uid = AUTH.currentUser.uid;
+
+      DB.collection("users")
+        .where("user_id", "==", uid)
+        .get()
+        .then(querySnapshot => {
+          querySnapshot.forEach(doc => {
+            this.username = doc.data().username;
+          });
+        });
     }
   }
 };

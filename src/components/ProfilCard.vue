@@ -1,20 +1,19 @@
-<template>
-    <div class="profil" >
-        <div class="profil__top">
-            <div class="profil__top--msg">
-                <a href=""><i class="profil__top--msg--icon far fa-envelope"></i></a>
-            </div>
-            <div class="profil__top--box">
-                <img class="profil__top--img" src="../assets/img/profil.jpg" alt="Profil Image">
-            </div>
-            <div class="profil__top--name">Rafael Nadal</div>
-            <div class="profil__top--location"> <i class="fas fa-map-marker-alt"></i> Istanbul</div>
-        </div>
-        <div class="profil__bottom">
-            <div class="profil__bottom--level">Seviye</div>
-            <div class="profil__bottom--desc">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugit quos ea dolor nesciunt deserunt vero sit consequuntur.</div>
-        </div>
-    </div>   
+<template lang="pug">
+    .profil
+      .profil__top
+        .profil__top--msg
+          a(href='')
+            i.profil__top--msg--icon.far.fa-envelope
+        .profil__top--box
+          img.profil__top--img(src='../assets/img/profil.jpg', alt='Profil Image')
+        .profil__top--name Rafael Nadal
+        .profil__top--location
+          i.fas.fa-map-marker-alt
+          |  Istanbul
+      .profil__bottom
+        .profil__bottom--level Seviye
+        .profil__bottom--desc
+          | Lorem ipsum dolor sit, amet consectetur adipisicing elit. Fugit quos ea dolor nesciunt deserunt vero sit consequuntur.  
 </template>
 
 <style lang="scss" scoped>
@@ -51,6 +50,7 @@
       border-radius: 50%;
       box-shadow: 10px 10px 40px rgba(#000, 0.3);
       margin-bottom: 10px;
+      width: 100px;
     }
     &--name {
       color: #000;

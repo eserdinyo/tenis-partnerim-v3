@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container home">
         <div class="row justify-content-start">
             <app-profil  v-for="user in users" :key="user.id" ></app-profil>
         </div>
@@ -33,6 +33,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.home {
+  margin-top: 30px;
+}
+</style>
 
 
 

@@ -50,7 +50,14 @@
               p.Form-item__error(
                 v-show="errors.has('password')"
               ) Şifreler aynı olmalı.
-            
+            .Form-item
+              select(v-model='selectedCity', @change="getTowns")
+                option(disabled='', value='') Şehir Seç
+                option(v-for="city in cities", :key="city.id", :value="city") {{city.name}}
+              select(v-model='selectedTown')
+                option(disabled='', value='') İlçe Seç
+                option(v-for="town in towns", :key="town.id") {{town.name}}
+
             .Form-item
               button.login-box__content--btn(
                 type="submit") Kayıt Ol
@@ -69,13 +76,20 @@
 <script>
 import { AUTH, DB } from "@/firebase";
 
+import axios from "axios";
+import _ from "underscore";
+
 export default {
   data() {
     return {
       email: "",
       username: "",
       password: "",
-      isActive: false
+      isActive: false,
+      cities: [],
+      towns: [],
+      selectedCity: "",
+      selectedTown: ""
     };
   },
   methods: {
@@ -92,8 +106,6 @@ export default {
           email: this.email
         });
 
-        console.log(user.user.uid);
-
         /* AUTH.onAuthStateChanged(user => {
           user.sendEmailVerification();
         }); */
@@ -104,7 +116,20 @@ export default {
     },
     closeModal() {
       //this.$router.push("/login");
+    },
+    getTowns() {
+      const id = this.selectedCity._id;
+      axios(`http://geoapi.sanalonyedi.net/v1/cities/${id}/towns`).then(res => {
+        this.towns = _.sortBy(res.data.data, "name");
+        console.log(this.towns);
+        
+      });
     }
+  },
+  created() {
+    axios("http://geoapi.sanalonyedi.net/v1/cities").then(res => {
+      this.cities = _.sortBy(res.data.data, "name");
+    });
   }
 };
 </script>

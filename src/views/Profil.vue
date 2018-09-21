@@ -3,7 +3,11 @@
     .container
       .header__content
         img.header__content--img(src="../assets/img/profil.jpg")
-        p.header__content--name Rafa Nadal
+        p.header__content--name {{username}}
+        
+        .header__content--location  
+          i.fas.fa-map-marker-alt
+          p Kadıköy / IST
         
 
 </template>
@@ -22,7 +26,7 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     DB.collection("users")
-      .where("email", "==", to.params.username)
+      .where("username", "==", to.params.username)
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -37,7 +41,7 @@ export default {
   methods: {
     fetchData() {
       DB.collection("users")
-        .where("email", "==", this.$route.params.username)
+        .where("username", "==", this.$route.params.username)
         .get()
         .then(querySnapshot => {
           querySnapshot.forEach(doc => {
@@ -56,25 +60,36 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-  padding: 20px 0px;
   background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 1));
-  background-position: center;
-  background-size: cover;
-  position: relative;
+  padding-bottom: 20px;
 
   &__content {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    width: 150px;
+    justify-content: center;
+    position: relative;
 
     &--img {
-      width: 100px;
+      width: 200px;
       border-radius: 50%;
       border: 5px solid #333;
     }
     &--name {
       font-weight: 500;
+      font-size: 100px;
+      margin-left: 20px;
+      line-height: 0;
+    }
+    &--location {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+
+      p {
+        margin-left: 10px;
+      }
     }
   }
 }
