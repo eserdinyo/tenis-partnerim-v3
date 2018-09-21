@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="row justify-content-start">
-            <app-profil  v-for="n in 10" :key="n.id" ></app-profil>
+            <app-profil  v-for="user in users" :key="user.id" ></app-profil>
         </div>
     </div>
 </template>
@@ -9,19 +9,28 @@
 
 
 <script>
-import AppProfil from "@/components/Profil";
+import { DB } from "@/firebase";
+import AppProfil from "@/components/ProfilCard";
 
 export default {
   data() {
     return {
-      username: ""
+      users: []
     };
   },
   components: {
     AppProfil
   },
   computed: {},
-  created() {}
+  created() {
+    DB.collection("users")
+      .get()
+      .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          this.users.push(doc.data());
+        });
+      });
+  }
 };
 </script>
 

@@ -8,8 +8,9 @@
       v-if="!isLoggedIn",
       to='/login',
       ) Giriş
-    p.header__nav--link(
+    router-link.header__nav--link(
       v-if="isLoggedIn",
+      :to="{name: 'user', params:{username:currentUser}}"
       ) {{currentUser}}
     
     router-link.header__nav--link(
@@ -62,7 +63,6 @@ export default {
   align-items: center;
   padding: 10px 50px;
   box-shadow: 10px 0 40px rgba(0, 0, 0, 0.288);
-  margin-bottom: 50px;
 
   &__nav {
     margin-left: 10px;

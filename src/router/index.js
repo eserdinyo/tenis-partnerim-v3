@@ -4,6 +4,8 @@ import Router from 'vue-router'
 import Home from '@/views/Home'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
+import Profil from '@/views/Profil'
+
 import { AUTH } from "@/firebase";
 
 
@@ -14,10 +16,7 @@ let router = new Router({
     {
       path: '/',
       name: 'Home',
-      component: Home,
-      meta: {
-        requiresAuth: true,
-      }
+      component: Home
     },
     {
       path: '/login',
@@ -33,6 +32,13 @@ let router = new Router({
       component: Register,
       meta: {
         requiresGuest: true,
+      }
+    }, {
+      path: '/u/:username',
+      name: 'user',
+      component: Profil,
+      meta: {
+        requiresAuth: true,
       }
     }
 

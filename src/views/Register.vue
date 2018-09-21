@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { AUTH, FIRESTORE } from "@/firebase";
+import { AUTH, DB } from "@/firebase";
 
 export default {
   data() {
@@ -86,16 +86,24 @@ export default {
           this.password
         );
 
-        AUTH.onAuthStateChanged(user => {
-          user.sendEmailVerification();
+        DB.collection("users").add({
+          user_id: user.user.uid,
+          username: this.username,
+          email: this.email
         });
+
+        console.log(user.user.uid);
+
+        /* AUTH.onAuthStateChanged(user => {
+          user.sendEmailVerification();
+        }); */
         this.isActive = true;
       } catch (err) {
         console.log(err.message);
       }
     },
     closeModal() {
-      this.$router.push("/login");
+      //this.$router.push("/login");
     }
   }
 };

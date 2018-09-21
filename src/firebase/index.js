@@ -7,4 +7,4 @@ import 'firebase/firestore'
 firebase.initializeApp(firebaseConfig)
 
 export const AUTH = firebase.auth()
-export const FIRESTORE = firebase.firestore()
+export const DB = firebase.firestore()
