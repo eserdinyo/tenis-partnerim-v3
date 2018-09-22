@@ -15,7 +15,16 @@
               p.Form-item__error(
                 v-show="errors.has('email')"
               ) Geçerli bir email girin.
-            
+            .Form-item__profil 
+              input(
+                type="file",
+                style='display:none',
+                ref="selectedImg",
+                @change="onImageSelected"
+                )
+              a.Form-item__profil--btn(href="#",@click="onClickImg")
+                p.Form-item__profil--text Seç
+                img(src="../assets/img/default_profil.png", ref="target")
             .Form-item  
               input.login-box__content--input(
                 type='text', 
@@ -65,7 +74,7 @@
               :star-size="20")
             .Form-item
               button.login-box__content--btn(
-                type="submit") Kayıt Ol
+                type="submit" ,@click="uploadImg") Kayıt Ol
           
           a.login-box__content--forget(href='#') Şifremi unuttum
           img.login-box__content--nadal(src='../assets/img/djokovic.png', alt='')
@@ -79,7 +88,7 @@
 </template>
 
 <script>
-import { AUTH, DB } from "@/firebase";
+import { AUTH, DB, STORAGE } from "@/firebase";
 
 import StarRating from "vue-star-rating";
 import axios from "axios";
@@ -99,7 +108,8 @@ export default {
       towns: [],
       selectedCity: "",
       selectedTown: "",
-      level: 1
+      level: 1,
+      profilImg: null
     };
   },
   methods: {
@@ -116,7 +126,7 @@ export default {
           email: this.email,
           city: this.selectedCity.name,
           town: this.selectedTown,
-          level: this.level,
+          level: this.level
         });
 
         /* AUTH.onAuthStateChanged(user => {
@@ -135,6 +145,26 @@ export default {
       axios(`http://geoapi.sanalonyedi.net/v1/cities/${id}/towns`).then(res => {
         this.towns = _.sortBy(res.data.data, "name");
       });
+    },
+    onClickImg() {
+      this.$refs.selectedImg.click();
+    },
+    onImageSelected(e) {
+      this.profilImg = e.target.files[0];
+
+      this.showImage(this.$refs.selectedImg, this.$refs.target);
+    },
+    uploadImg() {
+      const storeRef = STORAGE.ref("profil_photos/" + this.profilImg.name);
+      storeRef.put(this.profilImg);
+    },
+    showImage(src, target) {
+      const fr = new FileReader();
+
+      fr.onload = function() {
+        target.src = fr.result;
+      };
+      fr.readAsDataURL(src.files[0]);
     }
   },
   created() {
@@ -153,6 +183,34 @@ export default {
   width: 100%;
   &-item {
     margin-bottom: 10px;
+
+    &__profil {
+      position: absolute;
+      right: 20px;
+      top: 15%;
+      &--text {
+        position: absolute;
+        top: 15%;
+        z-index: 999;
+        color: #000;
+      }
+      &--btn {
+        text-decoration: none;
+        border-radius: 50%;
+        display: block;
+        height: 80px;
+        width: 80px;
+        outline: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          width: 78px;
+          border-radius: 50%;
+        }
+      }
+    }
     &__rating {
       margin-top: 3px;
     }
@@ -256,7 +314,7 @@ export default {
     &--nadal {
       width: 50%;
       position: absolute;
-      right: -10%;
+      right: -20%;
       bottom: 0;
       z-index: -1;
     }
