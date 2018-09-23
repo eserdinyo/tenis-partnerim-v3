@@ -109,7 +109,9 @@ export default {
       selectedCity: "",
       selectedTown: "",
       level: 1,
-      profilImg: null
+      profilImg: null,
+      profilImgName: "",
+      imgExt: ""
     };
   },
   methods: {
@@ -126,7 +128,8 @@ export default {
           email: this.email,
           city: this.selectedCity.name,
           town: this.selectedTown,
-          level: this.level
+          level: this.level,
+          profilImgName: this.profilImgName
         });
 
         /* AUTH.onAuthStateChanged(user => {
@@ -151,11 +154,15 @@ export default {
     },
     onImageSelected(e) {
       this.profilImg = e.target.files[0];
-
+      const imageName = this.profilImg.name;
+      const lastDot = imageName.lastIndexOf(".");
+      this.imgExt = imageName.slice(lastDot, imageName.length);
       this.showImage(this.$refs.selectedImg, this.$refs.target);
     },
     uploadImg() {
-      const storeRef = STORAGE.ref("profil_photos/" + this.profilImg.name);
+      this.profilImgName = `${this.username}${this.imgExt}`;
+
+      const storeRef = STORAGE.ref("profil_photos/" + this.profilImgName);
       storeRef.put(this.profilImg);
     },
     showImage(src, target) {
