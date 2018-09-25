@@ -3,6 +3,7 @@
         <div class="row justify-content-start">
             <app-profil :user=user v-for="user in users" :key="user.id" ></app-profil>
         </div>
+        <parent></parent>
     </div>
 </template>
 
@@ -12,6 +13,7 @@
 import { DB, STORAGE } from "@/firebase";
 import AppProfil from "@/components/ProfilCard";
 import axios from "axios";
+import Parent from './Parent'
 
 export default {
   data() {
@@ -29,10 +31,11 @@ export default {
     };
   },
   components: {
-    AppProfil
+    AppProfil,
+    Parent
   },
   methods: {
-    async getUsers() {
+    /* async getUsers() {
       const query = await DB.collection("users").get();
 
       query.forEach(doc => {
@@ -52,10 +55,10 @@ export default {
       })
 
       console.log(this.users);
-    }
+    } */
   },
   created() {
-    this.getUsers();
+    //this.getUsers();
   }
 };
 </script>
